@@ -15,6 +15,7 @@ new_model_path = 'C:/Projects/Sign Language/server/fixed_action.h5'
 
 # Load the model structure from the HDF5 file
 try:
+    
     with h5py.File(model_path, 'r') as f:
         model_config = f.attrs.get('model_config')
 
