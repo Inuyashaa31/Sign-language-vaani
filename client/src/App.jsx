@@ -4,6 +4,7 @@ import Model from "./pages/Model";
 import Login from "./pages/Login";
 import Singup from "./pages/Singup";
 import Tutorial from "./pages/Tutorial";
+import Letstry from "./pages/Letstry";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<Login />}/>
         <Route path="/login" element={<Singup />}/>
         <Route path="/tutorial" element={<Tutorial />}/>
+        <Route path="/letstry" element={<Letstry />}/>
       </Routes>
     </BrowserRouter>
     
