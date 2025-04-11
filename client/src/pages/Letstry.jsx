@@ -1,90 +1,42 @@
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from 'react';
+import { NavbarDefault } from '../components/Navbar';
 
 function Letstry() {
-  const [isCameraOn, setIsCameraOn] = useState(false);
-  const [predictedText, setPredictedText] = useState("");
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  let captureInterval = useRef(null);
-
-  const startCamera = async () => {
-    setIsCameraOn(true);
-    if (videoRef.current) {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      videoRef.current.srcObject = stream;
+  const stopStream = async () => {
+    try {
+      await fetch("http://localhost:5000/stop_video_feed", {
+        method: "POST",
+      });
+    } catch (err) {
+      console.error("Error stopping video feed", err);
     }
-
-    // Start capturing frames every 500ms
-    captureInterval.current = setInterval(captureFrame, 500);
   };
 
-  const stopCamera = () => {
-    setIsCameraOn(false);
-    if (videoRef.current?.srcObject) {
-      videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
-    }
-
-    clearInterval(captureInterval.current);
-  };
-
-  const captureFrame = async () => {
-    if (!videoRef.current || !canvasRef.current) return;
-
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-
-    // Set canvas size to video size
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Convert canvas image to base64
-    canvas.toBlob((blob) => {
-      const formData = new FormData();
-      formData.append("image", blob);
-
-      // Send frame to Flask backend
-      axios
-        .post("http://127.0.0.1:5000/predict", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
-        .then((response) => {
-          setPredictedText(response.data.prediction);
-        })
-        .catch((error) => console.error("Error sending frame:", error));
-    }, "image/jpeg");
-  };
+  useEffect(() => {
+    return () => {
+      stopStream(); // Cleanup on unmount
+    };
+  }, []);
 
   return (
     <div>
-         <div style={{ textAlign: "center", marginTop: "20px" }}>
-      <h2>Sign Language Detector</h2>
-
-      <button onClick={startCamera} disabled={isCameraOn} style={{ marginRight: "10px" }}>
-        Start Camera
-      </button>
-
-      <button onClick={stopCamera} disabled={!isCameraOn}>
-        Stop Camera
-      </button>
-
-      <div style={{ marginTop: "20px" }}>
-        <video ref={videoRef} autoPlay playsInline hidden={!isCameraOn} style={{ width: "640px" }} />
-        <canvas ref={canvasRef} hidden />
+      <NavbarDefault />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <h1 className="text-2xl font-bold mb-4">Sign Language Detection</h1>
+        <img
+          src="http://localhost:5000/video_feed"
+          alt="Sign Language Detection Feed"
+          className="w-[640px] h-[480px] border rounded-lg shadow-lg"
+        />
+        <button
+          onClick={stopStream}
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Stop
+        </button>
       </div>
-
-      <h3>Prediction: {predictedText}</h3>
     </div>
-
-
-
-    </div>
-  )
-
+  );
 }
 
-
-
-export default Letstry
+export default Letstry;
