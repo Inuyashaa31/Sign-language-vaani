@@ -10,8 +10,8 @@ function Model() {
                     <a className='text-7xl'>Would you like to take the Tutorial?</a>
                     <p className='text-4xl'>We can guide you through using the Sign Language Detection System step by step. Or, you can skip it and start right away!</p>
                     <div className='flex flex-row mx gap-8 p-10'>
-                        <div className='text-4xl text-white rounded-2xl border bg-primary px-10 py-2'><span>Take Tutorial</span></div>
-                        <div className='text-4xl text-white rounded-2xl border bg-primary px-10 py-2'><span>Skip</span></div>
+                        <a href="/tutorial" className='text-4xl text-white rounded-2xl border bg-primary px-10 py-2'><span>Take Tutorial</span></a>
+                        <a href="/letstry" className='text-4xl text-white rounded-2xl border bg-primary px-10 py-2'><span>Skip</span></a>
                     </div>
                 </div>
                 <div className='flex '>
