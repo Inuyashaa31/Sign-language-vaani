@@ -1,7 +1,38 @@
-import React from 'react'
 import { NavbarDefault } from '../components/Navbar'
+import React, {useState} from 'react';
+import {  signInWithEmailAndPassword   } from 'firebase/auth';
+import { auth } from '../firebase';
+import { NavLink, useNavigate } from 'react-router-dom'
+
 
 function Singup() {
+
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const onLogin = (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            setLoading(false);
+            // Signed in
+            const user = userCredential.user;
+            navigate("/")
+            console.log(user);
+        })
+        .catch((error) => {
+            setLoading(false);
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage)
+            alert("Incorrect UserName And Password!!!!!")
+        });
+
+    }
   return (
     <div>
         <NavbarDefault/>
@@ -24,11 +55,13 @@ function Singup() {
                                 <div className="mx-auto max-w-xs">
                                     <input
                                         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                                        type="email" placeholder="Email" />
+                                        type="email" required                                                                                
+                                        onChange={(e)=>setEmail(e.target.value)} placeholder="Email" />
                                     <input
                                         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                                        type="password" placeholder="Password" />
+                                        type="password" onChange={(e)=>setPassword(e.target.value)} required placeholder="Password" />
                                     <button
+                                        onClick={onLogin}
                                         className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                                         <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" strokeWidth="2"
                                             strokeLinecap="round" strokeLinejoin="round">
@@ -37,7 +70,7 @@ function Singup() {
                                             <path d="M20 8v6M23 11h-6" />
                                         </svg>
                                         <span className="ml-3">
-                                            Log In
+                                        {loading ? "Logging in..." : "Login"}
                                         </span>
                                     </button>
                                     <p className="mt-6 text-xs text-gray-600 text-center">

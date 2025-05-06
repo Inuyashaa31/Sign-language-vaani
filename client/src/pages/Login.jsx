@@ -1,7 +1,40 @@
-import React from 'react'
 import { NavbarDefault } from '../components/Navbar'
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 
 function Login() {
+
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('');
+
+    const onSubmit = async (e) => {
+        e.preventDefault()
+        setLoading(true);
+
+        await createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in
+                setLoading(false)
+                const user = userCredential.user;
+                console.log(user);
+                navigate("/login")
+                // ...
+            })
+            .catch((error) => {
+                setLoading(false)
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+                alert("already exist");
+                // ..
+            });
+
+
+    }
     return (
         <div>
             <NavbarDefault />
@@ -63,11 +96,21 @@ function Login() {
                                 <div className="mx-auto max-w-xs">
                                     <input
                                         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                                        type="email" placeholder="Email" />
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        placeholder="Email" />
                                     <input
                                         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                                        type="password" placeholder="Password" />
-                                    <button
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        placeholder="Password" />
+                                    <button 
+                                    type='submit'
+                                    onClick={onSubmit}  
                                         className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                                         <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" strokeWidth="2"
                                             strokeLinecap="round" strokeLinejoin="round">
@@ -76,7 +119,7 @@ function Login() {
                                             <path d="M20 8v6M23 11h-6" />
                                         </svg>
                                         <span className="ml-3">
-                                            Sign Up
+                                        {loading ? "Signing Up..." : "Sign Up"}
                                         </span>
                                     </button>
                                     <p className="mt-6 text-xs text-gray-600 text-center">

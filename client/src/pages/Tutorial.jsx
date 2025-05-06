@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { NavbarDefault } from "../components/Navbar";
 
 function Tutorial() {
   const videoRef = useRef(null);
@@ -61,13 +62,26 @@ function Tutorial() {
 
   return (
     <div>
-      <h2>Sign Language Detection</h2>
-      <video ref={videoRef} autoPlay playsInline width="640" height="480" />
-      <canvas ref={canvasRef} width="640" height="480" style={{ display: "none" }} />
-      <h3>Prediction: {prediction}</h3>
-      <button onClick={stopVideo} className="mt-2 px-4 py-2 bg-red-600 text-white rounded">
-        Stop
-      </button>
+      <div>
+        <NavbarDefault />
+      </div>
+      <div className="flex justify-center w-full text-4xl font-bold mt-[35px]">
+        <h1>Sign Language Detection</h1>
+      </div>
+      <div className="flex gap-24">
+        <div className="flex flex-col w-1/3 justify-center items-center">
+          <video ref={videoRef} autoPlay playsInline width="640" height="480" />
+          <canvas ref={canvasRef} width="640" height="480" style={{ display: "none" }} />
+
+          <button onClick={stopVideo} className="mt-2 px-4 py-2 w-1/3 bg-red-600 text-white rounded">
+            Stop
+          </button>
+        </div>
+        <div className="flex flex-col w-1/3 justify-center items-center">
+          <h3 className="font-bold text-2xl">Prediction</h3>
+          <h1 className="text-9xl h-[128px]">{prediction}</h1>
+        </div>
+      </div>
     </div>
   );
 }

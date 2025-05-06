@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavbarDefault } from '../components/Navbar';
+import '../scss/Letstry.scss';
 
 function Letstry() {
   const stopStream = async () => {
@@ -19,7 +20,7 @@ function Letstry() {
   }, []);
 
   return (
-    <div>
+    <div class="letstry-page-wrapper">
       <NavbarDefault />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <h1 className="text-2xl font-bold mb-4">Sign Language Detection</h1>
