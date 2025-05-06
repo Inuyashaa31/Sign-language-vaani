@@ -68,7 +68,7 @@ function Tutorial() {
       <div className="flex justify-center w-full text-4xl font-bold mt-[35px]">
         <h1>Sign Language Detection</h1>
       </div>
-      <div className="flex gap-24">
+      <div className="flex items-center m-14 justify-evenly">
         <div className="flex flex-col w-1/3 justify-center items-center">
           <video ref={videoRef} autoPlay playsInline width="640" height="480" />
           <canvas ref={canvasRef} width="640" height="480" style={{ display: "none" }} />

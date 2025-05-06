@@ -73,7 +73,7 @@ function About_us_hero() {
             <div>
               <h2 className="text-3xl font-bold mb-4 text-blue-800">Our Project</h2>
               <p className="text-lg text-gray-700">
-                This project is a Hand Sign Language Detection System that uses deep learning (CNN and LSTM)
+                This project is a Hand Sign Language Detection System that uses deep learning (LSTM)
                 to recognize hand signs of alphabets and convert them into readable text. It's designed to assist
                 individuals with hearing or speech impairments in real-time communication.
               </p>
