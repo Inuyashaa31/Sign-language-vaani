@@ -6,58 +6,56 @@ import mediapipe as mp
 import base64
 from tensorflow.keras.models import load_model, model_from_json
 
+# App setup
 app = Flask(__name__)
 CORS(app)
 
-# Load models
-# Load alphabet model
-with open("model.json", "r") as json_file:
-    model_json = json_file.read()
-alphabet_model = model_from_json(model_json)
-alphabet_model.load_weights("model.h5")
-
 # Load action model
 action_model = load_model('action1.h5')
-
-# Labels
 actions = np.array(['hello', 'thanks', 'iloveyou', 'victory'])
+
+# Load alphabet model
+with open("model (1).json", "r") as json_file:
+    model_json = json_file.read()
+alphabet_model = model_from_json(model_json)
+alphabet_model.load_weights("model (2).h5")
+
+# Alphabet labels
 alphabets = [chr(i) for i in range(65, 91)]  # A-Z
 
-# Threshold and sequence state
-sequence = []
-sentence = []
-threshold = 0.8
-
-# Mediapipe
+# Mediapipe setup
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
 
-# Camera control
+# Globals
+sequence = []
+sentence = []
+threshold = 0.8
 cap = None
 is_running = False
 
-# ---- KEYPOINT EXTRACTION ----
+# ---- FUNCTION: Mediapipe Detection ----
+def mediapipe_detection(image, model):
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    results = model.process(image_rgb)
+    return image, results
+
+# ---- FUNCTION: Keypoint Extraction for Action ----
 def extract_keypoints(results):
-    # Full holistic keypoints (used for action model)
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]) if results.pose_landmarks else np.zeros((33, 4))
     face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]) if results.face_landmarks else np.zeros((468, 3))
     lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]) if results.left_hand_landmarks else np.zeros((21, 3))
     rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]) if results.right_hand_landmarks else np.zeros((21, 3))
     return np.concatenate([pose.flatten(), face.flatten(), lh.flatten(), rh.flatten()])
 
+# ---- FUNCTION: Keypoint Extraction for Alphabet ----
 def extract_hand_keypoints(results):
-    # Only hands (used for alphabet model)
     if results.multi_hand_landmarks:
         hand = results.multi_hand_landmarks[0]
         return np.array([[res.x, res.y, res.z] for res in hand.landmark]).flatten()
     else:
         return np.zeros((21 * 3,))
-
-def mediapipe_detection(image, model):
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    results = model.process(image_rgb)
-    return image, results
 
 # ---- VIDEO STREAM ----
 def generate_frames():
@@ -69,6 +67,7 @@ def generate_frames():
             ret, frame = cap.read()
             if not ret:
                 break
+
             image, results = mediapipe_detection(frame, holistic)
             keypoints = extract_keypoints(results)
             sequence.append(keypoints)
@@ -82,6 +81,7 @@ def generate_frames():
                 if len(sentence) > 5:
                     sentence = sentence[-5:]
 
+            # Draw prediction
             text = " ".join(sentence)
             x, y = 10, 30
             (text_width, text_height), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
@@ -114,6 +114,7 @@ def stop_video_feed():
         cap = None
     return jsonify({"status": "Camera stopped"})
 
+# ---- ALPHABET PREDICTION ----
 @app.route("/predict_alphabet", methods=["POST"])
 def predict_alphabet():
     try:
@@ -122,28 +123,27 @@ def predict_alphabet():
         if not frame_data:
             return jsonify({"error": "No frame provided"}), 400
 
-        # Remove base64 prefix
         if ',' in frame_data:
             frame_data = frame_data.split(",")[1]
 
-        # Decode
         image_data = base64.b64decode(frame_data)
         np_arr = np.frombuffer(image_data, np.uint8)
         image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-        # Detect hands only
-        with mp_hands.Hands(static_image_mode=True, max_num_hands=1, min_detection_confidence=0.5) as hands:
-            image, results = mediapipe_detection(image, hands)
-            keypoints = extract_hand_keypoints(results)
+        cropframe = image[40:400, 0:300]  # Crop to match new model
+        image, results = mediapipe_detection(cropframe, mp_hands.Hands(
+            static_image_mode=True,
+            max_num_hands=1,
+            min_detection_confidence=0.5
+        ))
 
+        keypoints = extract_hand_keypoints(results)
         if keypoints is None or keypoints.shape != (63,):
             return jsonify({"error": "No hand landmarks found"}), 400
 
-        # Create 30-frame sequence
-        sequence_input = np.array([keypoints] * 30)  # shape (30, 63)
-        sequence_input = np.expand_dims(sequence_input, axis=0)  # shape (1, 30, 63)
+        sequence_input = np.array([keypoints] * 30)
+        sequence_input = np.expand_dims(sequence_input, axis=0)
 
-        # Predict
         res = alphabet_model.predict(sequence_input)[0]
         prediction = alphabets[np.argmax(res)]
 
@@ -153,5 +153,6 @@ def predict_alphabet():
         print("PREDICT ALPHABET ERROR:", str(e))
         return jsonify({"error": str(e)}), 500
 
+# ---- MAIN ----
 if __name__ == "__main__":
     app.run(debug=True)
