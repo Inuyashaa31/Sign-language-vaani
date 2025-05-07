@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import about_us from '../assets/about_us.jpg';
+import mohit from '../assets/mohit.png';
+import sarvesh from '../assets/sarvesh.png';
+import shreya from '../assets/shreya.png';
+import vibhuti from '../assets/vibhuti.png';
 
 function About_us_hero() {
   const sections = [
@@ -47,8 +51,8 @@ function About_us_hero() {
               key={section.id}
               onClick={() => setActiveSection(section.id)}
               className={`block w-full text-left px-4 py-2 rounded transition duration-300 ${activeSection === section.id
-                  ? 'bg-blue-800 text-white'
-                  : 'bg-gray-100 hover:bg-gray-200'
+                ? 'bg-blue-800 text-white'
+                : 'bg-gray-100 hover:bg-gray-200'
                 }`}
             >
               {section.title}
@@ -90,7 +94,7 @@ function About_us_hero() {
           {activeSection === 'Team Contributions' && (
             <div>
               <h2 className="text-3xl font-bold mb-4 text-blue-800">Team Contributions</h2>
-              <h2 className='text-blue-800 text-2xl'>Technology Used:</h2>
+              <h2 className='text-blue-800 text-2xl font-bold'>Technology Used:</h2>
               <ul className="list-disc list-inside text-gray-700 text-xl space-y-1">
                 <li>Python, NumPy, OpenCV</li>
                 <li>TensorFlow/Keras (CNN, LSTM)</li>
@@ -99,73 +103,78 @@ function About_us_hero() {
                 <li>Git, GitHub (for collaboration)</li>
               </ul>
 
+              <h2 className='text-blue-800 mt-4 text-2xl font-bold'>Team & Roles: </h2>
+
               <div class="text-sm grid grid-cols-4 gap-4 p-5">
+
                 <figure class="relative flex flex-col-reverse bg-slate-100 rounded-lg p-6 dark:bg-slate-800 dark:highlight-white/5">
                   <blockquote class="mt-6 text-center text-slate-700 dark:text-slate-300">
-                    <p>I may not show it but i cant live without</p>
+                    <p>Model Building: Designing and training CNN-LSTM models for accurate sign detection. <br /> <br /> Data Collection & Preprocessing: Capturing and organizing 300+ images per alphabet, converting to .npy format.</p>
                   </blockquote>
                   <figcaption class="flex flex-col items-center">
-                    <img src="https://images.unsplash.com/photo-1632910121591-29e2484c0259?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxjb2RlcnxlbnwwfDB8fHwxNzEwMTY0NjIzfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="" class="flex-none w-14 h-14 rounded-full object-cover"/>
-                      <div class="flex-auto text-center">
-                        <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
-                          John Doe
-                        </div>
-                        <div class="mt-0.5 dark:text-slate-300">
-                          Web Developer
-                        </div>
+                    <img src={shreya} alt="" class="flex-none w-14 h-14 rounded-full object-contain" />
+                    <div class="flex-auto text-center">
+                      <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
+                        Shreya Pawar
                       </div>
+                      <div class="mt-0.5 dark:text-slate-300">
+                        Project Lead/AI Engineer
+                      </div>
+                    </div>
                   </figcaption>
                 </figure>
                 <figure class="relative flex flex-col-reverse bg-slate-100 rounded-lg p-6 dark:bg-slate-800 dark:highlight-white/5">
                   <blockquote class="mt-6 text-center text-slate-700 dark:text-slate-300">
-                    <p>I may not show it but i cant live without</p>
+                    <p>Frontend/UI Development: Built an intuitive interface using React.js, Tailwind CSS, and Firebase for real-time interaction and user authentication..<br /><br />Integration & Testing: Ensuring the model runs smoothly on real-time inputs.</p>
                   </blockquote>
                   <figcaption class="flex flex-col items-center">
-                    <img src="https://images.unsplash.com/photo-1632910121591-29e2484c0259?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxjb2RlcnxlbnwwfDB8fHwxNzEwMTY0NjIzfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="" class="flex-none w-14 h-14 rounded-full object-cover"/>
-                      <div class="flex-auto text-center">
-                        <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
-                          John Doe
-                        </div>
-                        <div class="mt-0.5 dark:text-slate-300">
-                          Web Developer
-                        </div>
+                    <img src={mohit} alt="" class="flex-none w-14 h-14 rounded-full object-contain" />
+                    <div class="flex-auto text-center">
+                      <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
+                        Mohit Rathod
                       </div>
+                      <div class="mt-0.5 dark:text-slate-300">
+                        Web Developer
+                      </div>
+                    </div>
+                  </figcaption>
+                </figure>
+
+                <figure class="relative flex flex-col-reverse bg-slate-100 rounded-lg p-6 dark:bg-slate-800 dark:highlight-white/5">
+                  <blockquote class="mt-6 text-center text-slate-700 dark:text-slate-300">
+                    <p>Data Collection & Preprocessing: Capturing and organizing 300+ images per alphabet, converting to .npy format. <br /> <br />Model Building: Designing and training CNN-LSTM models for accurate sign detection.</p>
+                  </blockquote>
+                  <figcaption class="flex flex-col items-center">
+                    <img src={sarvesh} alt="" class="flex-none w-14 h-14 rounded-full object-contain" />
+                    <div class="flex-auto text-center">
+                      <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
+                        Sarvesh Patil
+                      </div>
+                      <div class="mt-0.5 dark:text-slate-300">
+                        Machine Learning Engineer
+                      </div>
+                    </div>
                   </figcaption>
                 </figure>
                 <figure class="relative flex flex-col-reverse bg-slate-100 rounded-lg p-6 dark:bg-slate-800 dark:highlight-white/5">
                   <blockquote class="mt-6 text-center text-slate-700 dark:text-slate-300">
-                    <p>I may not show it but i cant live without</p>
+                    <p>Integration & Testing: Real-time model performance, enhanced accuracy, and implemented workflows to ensure seamless integration.<br /><br /> Frontend/UI Development: Creating an intuitive interface for users to interact with the system.
+                    </p>
                   </blockquote>
                   <figcaption class="flex flex-col items-center">
-                    <img src="https://images.unsplash.com/photo-1632910121591-29e2484c0259?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxjb2RlcnxlbnwwfDB8fHwxNzEwMTY0NjIzfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="" class="flex-none w-14 h-14 rounded-full object-cover"/>
-                      <div class="flex-auto text-center">
-                        <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
-                          John Doe
-                        </div>
-                        <div class="mt-0.5 dark:text-slate-300">
-                          Web Developer
-                        </div>
+                    <img src={vibhuti} alt="" class="flex-none w-14 h-14 rounded-full object-contain" />
+                    <div class="flex-auto text-center">
+                      <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
+                        Vibhuti Khot
                       </div>
+                      <div class="mt-0.5 dark:text-slate-300">
+                        Frontend Integration Engineer
+                      </div>
+                    </div>
                   </figcaption>
                 </figure>
-                <figure class="relative flex flex-col-reverse bg-slate-100 rounded-lg p-6 dark:bg-slate-800 dark:highlight-white/5">
-                  <blockquote class="mt-6 text-center text-slate-700 dark:text-slate-300">
-                    <p>I may not show it but i cant live without</p>
-                  </blockquote>
-                  <figcaption class="flex flex-col items-center">
-                    <img src="" alt="" class="flex-none w-14 h-14 rounded-full object-cover"/>
-                      <div class="flex-auto text-center">
-                        <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
-                          John Doe
-                        </div>
-                        <div class="mt-0.5 dark:text-slate-300">
-                          Web Developer
-                        </div>
-                      </div>
-                  </figcaption>
-                </figure>
-                
-                
+
+
               </div>
             </div>
           )}
